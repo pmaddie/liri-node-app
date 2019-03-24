@@ -1,54 +1,89 @@
 require("dotenv").config();
+var Spotify = require('node-spotify-api');
+var axios = require("axios");
 
 //Add the code required to import the keys.js file and store it in a variable.
 var keys = require("./keys.js")
 
-var spotify = new Spotify(keys.spotify);
-
-// make into switches
-concert-this
-
-spotify-this-song
-
-movie-this
-
-do-what-it-says
-
-
-//
-
-
-
-// Include the axios npm package (Don't forget to run "npm install axios" in this folder first!)
-var axios = require("axios");
-
-// Store all of the arguments in an array
-var nodeArgs = process.argv;
 
 // Create an empty variable for holding the movie name
 var movieName = "";
 
-// Loop through all the words in the node argument
-// And do a little for-loop magic to handle the inclusion of "+"s
-for (var i = 2; i < nodeArgs.length; i++) {
 
-  if (i > 2 && i < nodeArgs.length) {
-    movieName = movieName + "+" + nodeArgs[i];
-  }
-  else {
-    movieName += nodeArgs[i];
+// Store all of the arguments in an array
+var nodeArgs = process.argv[2];
+var input = process.argv[3];
 
-  }
+// make into switches
+switch (nodeArgs) {
+
+  case "concert-this":
+    console.log("concert-this");
+    //call the function for "concert" function 
+    break;
+
+  case "spotify-this-song":
+    console.log("spotify-this-song");
+    song(input);
+    break;
+
+  case "movie-this":
+    console.log("movie-this");
+    movie(input);
+    break;
+
+  case "do-what-it-says":
+    console.log("do-what-it-says");
+    //call the function for "do what it says" function
+    break;
+
+  default:
+    console.log("Invalid command.")
 }
 
-// Then run a request with axios to the OMDB API with the movie specified
-var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
-// This line is just to help us debug against the actual URL.
-console.log(queryUrl);
 
-axios.get(queryUrl).then(
-  function(response) {
-    console.log("Release Year: " + response.data.Year);
+function movie(movieName) {
+  // Then run a request with axios to the OMDB API with the movie specified 
+  var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+  if (!movieName) {
+    movieName = "Mr Nobody";
+  console.log(queryUrl);
+  axios.get(queryUrl).then(
+    function (response) {
+      console.log("Movie Title:" + response.data.Title);
+      console.log("Movie Release Year: " + response.data.Year);
+      console.log("IMDB Rating: " + response.data.imdbRating);
+      console.log("Rotten Tomatoes Rating: " + response.data.Ratings[1].Value);
+      console.log("Country: " + response.data.Country);
+      console.log("Language: " + response.data.Language);
+      console.log("Plot: " + response.data.Plot);
+      console.log("Starring: " + response.data.Actors);
+    }
+  );
+}
+
+
+function song(songName) {
+  var spotify = new Spotify(keys.spotify);
+  if (!songName) {
+    songName = "the sign";
   }
-);
+  spotify.search({ type: 'track', query: songName }, function (err, data) {
+    if (err) {
+      return console.log('Error occurred: ' + err);
+    }
+    // loop for multiple results
+    var condition = data.tracks.items.length
+    for (var i = 0; i < condition; i++) {
+      if (i >= 5) {
+        return true;
+      }
+      console.log("===================================================================");
+      console.log("Artist: " + data.tracks.items[i].album.artists[0].name);
+      console.log("Album Name: " + data.tracks.items[i].album.name);
+      console.log("Song Name: " + data.tracks.items[i].name);
+      console.log("Preview Link: " + data.tracks.items[i].album.external_urls.spotify);
+    }
+  }
+});
