@@ -7,19 +7,19 @@ var keys = require("./keys.js")
 
 
 // Create an empty variable for holding the movie name
-var movieName = "";
+// var movieName = "";
 
 
 // Store all of the arguments in an array
-var nodeArgs = process.argv[2];
+var command = process.argv[2];
 var input = process.argv[3];
 
 // make into switches
-switch (nodeArgs) {
+switch (command) {
 
   case "concert-this":
     console.log("concert-this");
-    //call the function for "concert" function 
+    concert(input);
     break;
 
   case "spotify-this-song":
@@ -42,48 +42,70 @@ switch (nodeArgs) {
 }
 
 
-
+//movie-this:
 function movie(movieName) {
   // Then run a request with axios to the OMDB API with the movie specified 
   var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
   if (!movieName) {
-    movieName = "Mr Nobody";
-  console.log(queryUrl);
-  axios.get(queryUrl).then(
-    function (response) {
-      console.log("Movie Title:" + response.data.Title);
-      console.log("Movie Release Year: " + response.data.Year);
-      console.log("IMDB Rating: " + response.data.imdbRating);
-      console.log("Rotten Tomatoes Rating: " + response.data.Ratings[1].Value);
-      console.log("Country: " + response.data.Country);
-      console.log("Language: " + response.data.Language);
-      console.log("Plot: " + response.data.Plot);
-      console.log("Starring: " + response.data.Actors);
-    }
-  );
-}
-
-
+    movieName = 'Mr Nobody';
+    console.log("If you haven't watched Mr. Nobody, then you should: http://www.imdb.com/title/tt0485947/");
+    console.log("It's on Netflix!");
+  }  else {
+    console.log(queryUrl);
+    axios.get(queryUrl).then(
+      function (response) {
+        console.log("Movie Title: " + response.data.Title);
+        console.log("Movie Release Year: " + response.data.Year);
+        console.log("IMDB Rating: " + response.data.imdbRating);
+        console.log("Rotten Tomatoes Rating: " + response.data.Ratings[1].Value);
+        console.log("Country: " + response.data.Country);
+        console.log("Language: " + response.data.Language);
+        console.log("Plot: " + response.data.Plot);
+        console.log("Starring: " + response.data.Actors);
+      }
+    );
+  }
+}  
+  
+    
+//spotify-this-song:
 function song(songName) {
   var spotify = new Spotify(keys.spotify);
   if (!songName) {
-    songName = "the sign";
-  }
-  spotify.search({ type: 'track', query: songName }, function (err, data) {
-    if (err) {
-      return console.log('Error occurred: ' + err);
-    }
-    // loop for multiple results
-    var condition = data.tracks.items.length
-    for (var i = 0; i < condition; i++) {
-      if (i >= 5) {
-        return true;
+    songName = 'the sign Ace of Bass';
+  } else {
+    spotify.search({ type: 'track', query: songName }, function (err, data) {
+      if (err) {
+        return console.log('Error occurred: ' + err);
       }
-      console.log("===================================================================");
-      console.log("Artist: " + data.tracks.items[i].album.artists[0].name);
-      console.log("Album Name: " + data.tracks.items[i].album.name);
-      console.log("Song Name: " + data.tracks.items[i].name);
-      console.log("Preview Link: " + data.tracks.items[i].album.external_urls.spotify);
-    }
+      // loop for multiple results
+      var condition = data.tracks.items.length
+      for (var i = 0; i < condition; i++) {
+        if (i >= 5) {
+          return true;
+        }
+        console.log("===================================================================");
+        console.log("Artist: " + data.tracks.items[i].album.artists[0].name);
+        console.log("Album Name: " + data.tracks.items[i].album.name);
+        console.log("Song Name: " + data.tracks.items[i].name);
+        console.log("Preview Link: " + data.tracks.items[i].album.external_urls.spotify);
+      }
+    })
   }
-});
+}
+
+//concert-this:
+
+function concert(artist) {
+  var queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
+console.log(queryUrl);
+axios.get(queryUrl).then(
+  function (response) {
+    // console.log(response.data);
+    console.log("Venue: " + );
+    console.log("Location: " + );
+    console.log("Date of Event MM/DD/YYYY " + );
+})
+}
+
+//create do what it says function //
