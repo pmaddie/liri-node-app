@@ -4,10 +4,10 @@ first node.js project
 
 # About The App:
 
-##Commands. 
+## Commands. 
 Liri will take in a command and produce results per search, all within the terminal.
 
-###concert-this
+### **concert-this**
 Will produce the following results:
 - Venue
 - Location
@@ -17,7 +17,7 @@ Will produce the following results:
 
 
 
-###movie-this
+### **movie-this**
 Will produce the following results:
 - Movie Title
 - Release Year
@@ -32,7 +32,7 @@ Will produce the following results:
 
 
 
-###spotify-this-song
+### **spotify-this-song**
 Will produce the following results:
 - Artist
 - Album Name
@@ -43,7 +43,7 @@ Will produce the following results:
 
 
 
-###do-what-it-says
+### **do-what-it-says**
 Will produce the following results:
 - the command and input that is in the random.txt file.
 
